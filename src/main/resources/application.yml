@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: magic
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  flyway:
+    user: spring_magic
+    password: 12345
+    url: jdbc:postgresql://localhost:5432/spring_magic
+    locations: [
+      classpath:db/migration
+    ]
+  jpa:
+    hibernate.ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_magic
+    username: spring_magic
+    password: 12345
+    driver-class-name: org.postgresql.Driver
