@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS deck (id INTEGER NOT NULL PRIMARY KEY,
+    commander_id UUID,
+    user_id INTEGER
+);
+
+ALTER TABLE "user" ADD COLUMN deck_id INTEGER;
+
+ALTER TABLE "user"
+ADD CONSTRAINT user_deck_id
+FOREIGN KEY (deck_id) REFERENCES deck(id);

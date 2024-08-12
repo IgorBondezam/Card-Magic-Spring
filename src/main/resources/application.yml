@@ -7,9 +7,10 @@ spring:
     user: spring_magic
     password: 12345
     url: jdbc:postgresql://localhost:5432/spring_magic
-    locations: [
-      classpath:db/migration
-    ]
+    locations: classpath:db/migration
+    schemas: spring_magic
+    enabled: true
+    baseline-on-migrate: true
   jpa:
     hibernate.ddl-auto: none
     database-platform: org.hibernate.dialect.PostgreSQLDialect

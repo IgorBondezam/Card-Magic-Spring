@@ -20,8 +20,13 @@ public class Deck {
     private Card commander;
 
     @ManyToMany
+    @JoinTable(
+            name = "deck_card",
+            joinColumns = @JoinColumn(name = "decK_id"),
+            inverseJoinColumns = @JoinColumn(name = "card_id"))
     private List<Card> cards;
 
     @OneToOne
+    @Column(name = "user_id")
     private User user;
 }

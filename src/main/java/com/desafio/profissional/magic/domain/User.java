@@ -1,8 +1,6 @@
 package com.desafio.profissional.magic.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -15,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Email
@@ -25,5 +24,6 @@ public class User {
     private String password;
 
     @OneToOne
+    @Column(name = "deck_id")
     private Deck deck;
 }
