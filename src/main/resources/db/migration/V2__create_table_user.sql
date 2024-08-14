@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS "user" (id Integer  NOT NULL PRIMARY KEY,
-    email VARCHAR(4000),
-    password VARCHAR(4000)
-)

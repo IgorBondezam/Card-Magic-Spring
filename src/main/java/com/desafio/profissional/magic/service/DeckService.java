@@ -31,6 +31,9 @@ public class DeckService {
 
     public void set99Cards(Long userId) throws MagicValidatorException, IOException {
         Deck actualDeck = findDeckByUserId(userId);
+        if(Objects.isNull(actualDeck)){
+            throw new MagicValidatorException("Deck doesn't have been set yet.");
+        }
         if(Objects.isNull(actualDeck.getCommander())){
             throw new MagicValidatorException("Commander doesn't hava been set yet.");
         }

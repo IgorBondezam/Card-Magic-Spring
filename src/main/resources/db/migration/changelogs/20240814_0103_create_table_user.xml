@@ -1,0 +1,25 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="1" author="igor.bondezam">
+        <preConditions onFail="MARK_RAN" onFailMessage="The table User already exists">
+            <not>
+                <tableExists tableName="USER"/>
+            </not>
+        </preConditions>
+        <createTable tableName="USER">
+            <column name="id" type="${numerico}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USER"/>
+            </column>
+            <column name="email" type="${texto100}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="${texto255}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

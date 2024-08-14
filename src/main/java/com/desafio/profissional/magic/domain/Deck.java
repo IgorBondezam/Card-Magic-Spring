@@ -17,6 +17,7 @@ public class Deck {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "commander")
     private Card commander;
 
     @ManyToMany
@@ -27,6 +28,6 @@ public class Deck {
     private List<Card> cards;
 
     @OneToOne
-    @Column(name = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 }

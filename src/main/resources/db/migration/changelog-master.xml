@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <property name="numerico" value="numeric(10,0)"/>
+    <property name="numericoDecimal" value="numeric(10,4)"/>
+    <property name="sequence" value="bigint"/>
+
+    <property name="UUID" value="UUID"/>
+    <property name="texto20" value="varchar(20)"/>
+    <property name="texto255" value="varchar(255)"/>
+    <property name="texto100" value="varchar(100)"/>
+
+    <property name="data" value="date"/>
+
+    <includeAll path="db/migration/changelogs"/>
+</databaseChangeLog>

@@ -24,6 +24,6 @@ public class User {
     private String password;
 
     @OneToOne
-    @Column(name = "deck_id")
+    @JoinColumn(name = "deck_id")
     private Deck deck;
 }

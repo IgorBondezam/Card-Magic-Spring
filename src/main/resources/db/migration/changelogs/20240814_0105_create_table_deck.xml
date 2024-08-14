@@ -1,0 +1,52 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="1" author="igor.bondezam">
+        <preConditions onFail="MARK_RAN" onFailMessage="The table Deck already exists">
+            <not>
+                <tableExists tableName="DECK"/>
+            </not>
+        </preConditions>
+        <createTable tableName="DECK">
+            <column name="id" type="${numerico}">
+                <constraints primaryKeyName="PK_DECK" primaryKey="true" nullable="false"/>
+            </column>
+            <column name="commander" type="${numerico}">
+                <constraints foreignKeyName="FK_DECK_COMMANDER"/>
+            </column>
+            <column name="user_id" type="${numerico}">
+                <constraints foreignKeyName="FK_DECK_USER"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="igor.bondezam">
+        <preConditions onFail="MARK_RAN" onFailMessage="The table DECK_CARD already exists">
+            <not>
+                <tableExists tableName="DECK_CARD"/>
+            </not>
+        </preConditions>
+        <createTable tableName="DECK_CARD">
+            <column name="DECK_ID" type="${numerico}"/>
+            <column name="CARD_ID" type="${numerico}"/>
+        </createTable>
+
+        <addPrimaryKey tableName="DECK_CARD" columnNames="DECK_ID, CARD_ID"/>
+    </changeSet>
+
+    <changeSet id="3" author="igor.bondezam">
+        <preConditions onFail="MARK_RAN" onFailMessage="The column deck_id already exists">
+            <not>
+                <columnExists columnName="deck_id" tableName="USER"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="USER">
+            <column name="DECK_ID" type="${numerico}">
+                <constraints foreignKeyName="FK_USER_DECK"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
