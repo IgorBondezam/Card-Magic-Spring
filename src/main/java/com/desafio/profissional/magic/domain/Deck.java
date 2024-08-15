@@ -1,6 +1,8 @@
 package com.desafio.profissional.magic.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,12 @@ import java.util.List;
 public class Deck {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deck_sequence")
+    @SequenceGenerator(allocationSize = 1, name = "deck_sequence", sequenceName ="deck_sequence" )
     private Long id;
+
+    @NotBlank
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "commander")
@@ -29,5 +36,6 @@ public class Deck {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties(value = {"deck"})
     private User user;
 }

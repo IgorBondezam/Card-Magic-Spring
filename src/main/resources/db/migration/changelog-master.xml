@@ -11,6 +11,7 @@
     <property name="UUID" value="UUID"/>
     <property name="texto20" value="varchar(20)"/>
     <property name="texto255" value="varchar(255)"/>
+    <property name="texto4000" value="varchar(4000)"/>
     <property name="texto100" value="varchar(100)"/>
 
     <property name="data" value="date"/>

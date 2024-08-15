@@ -6,10 +6,10 @@
     <changeSet id="1" author="igor.bondezam">
         <preConditions onFail="MARK_RAN" onFailMessage="The table User already exists">
             <not>
-                <tableExists tableName="USER"/>
+                <tableExists tableName="userplayer"/>
             </not>
         </preConditions>
-        <createTable tableName="USER">
+        <createTable tableName="userplayer">
             <column name="id" type="${numerico}">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_USER"/>
             </column>
@@ -20,6 +20,18 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="igor.bondezam">
+        <preConditions onFail="MARK_RAN"  onFailMessage="The sequence userplayer_sequence already exists">
+            <not>
+                <sequenceExists sequenceName="userplayer_sequence"/>
+            </not>
+        </preConditions>
+        <createSequence
+                sequenceName="userplayer_sequence"
+                startValue="1"
+                incrementBy="1"/>
     </changeSet>
 
 </databaseChangeLog>

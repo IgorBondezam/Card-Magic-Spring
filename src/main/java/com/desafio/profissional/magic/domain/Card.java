@@ -2,16 +2,12 @@ package com.desafio.profissional.magic.domain;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Data
@@ -21,6 +17,7 @@ import java.util.UUID;
 public class Card {
 
     @Id
+    @GeneratedValue(generator = "UUID")
     private UUID id;
     private String name;
     private LocalDate released_at;
@@ -29,12 +26,40 @@ public class Card {
     private String mana_cost;
     private String oracle_text;
 
-    @ElementCollection
-    private List<String> color_identity = new ArrayList();
-    @ElementCollection
-    private List<String> colors = new ArrayList();
-    @ElementCollection
-    private List<String> produced_mana = new ArrayList();
+    private String color_identity;
+    private String colors;
+    private String produced_mana;
 
+    public List<String> getColor_identity() {
+        return Arrays.asList(color_identity.split(","));
+    }
 
+    public List<String> getColors() {
+        return Arrays.asList(colors.split(","));
+    }
+
+    public List<String> getProduced_mana() {
+        return Arrays.asList(produced_mana.split(","));
+    }
+
+    public void setColor_identity(List<String> color_identity) {
+        if(Objects.isNull(color_identity)) {
+            return;
+        }
+        this.color_identity = String.join(",", color_identity);
+    }
+
+    public void setColors(List<String> colors) {
+        if(Objects.isNull(colors)) {
+            return;
+        }
+        this.colors = String.join(",", colors);
+    }
+
+    public void setProduced_mana(List<String> produced_mana) {
+        if(Objects.isNull(produced_mana)) {
+            return;
+        }
+        this.produced_mana = String.join(",", produced_mana);
+    }
 }

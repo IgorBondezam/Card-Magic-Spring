@@ -13,7 +13,10 @@
             <column name="id" type="${numerico}">
                 <constraints primaryKeyName="PK_DECK" primaryKey="true" nullable="false"/>
             </column>
-            <column name="commander" type="${numerico}">
+            <column name="name" type="${texto255}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="commander" type="${UUID}">
                 <constraints foreignKeyName="FK_DECK_COMMANDER"/>
             </column>
             <column name="user_id" type="${numerico}">
@@ -30,7 +33,7 @@
         </preConditions>
         <createTable tableName="DECK_CARD">
             <column name="DECK_ID" type="${numerico}"/>
-            <column name="CARD_ID" type="${numerico}"/>
+            <column name="CARD_ID" type="${UUID}"/>
         </createTable>
 
         <addPrimaryKey tableName="DECK_CARD" columnNames="DECK_ID, CARD_ID"/>
@@ -39,14 +42,26 @@
     <changeSet id="3" author="igor.bondezam">
         <preConditions onFail="MARK_RAN" onFailMessage="The column deck_id already exists">
             <not>
-                <columnExists columnName="deck_id" tableName="USER"/>
+                <columnExists columnName="deck_id" tableName="userplayer"/>
             </not>
         </preConditions>
-        <addColumn tableName="USER">
+        <addColumn tableName="userplayer">
             <column name="DECK_ID" type="${numerico}">
                 <constraints foreignKeyName="FK_USER_DECK"/>
             </column>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="4" author="igor.bondezam">
+        <preConditions onFail="MARK_RAN"  onFailMessage="The sequence deck_sequence already exists">
+            <not>
+                <sequenceExists sequenceName="deck_sequence"/>
+            </not>
+        </preConditions>
+        <createSequence
+                sequenceName="deck_sequence"
+                startValue="1"
+                incrementBy="1"/>
     </changeSet>
 
 </databaseChangeLog>
