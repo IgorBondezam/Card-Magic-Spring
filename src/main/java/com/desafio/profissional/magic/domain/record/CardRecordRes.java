@@ -11,6 +11,7 @@ public record CardRecordRes(
         String name,
         Double cmc,
         String type_line,
-        List<String> colors
+        List<String> colors,
+        List<String> color_identity
 ) {
 }

@@ -17,7 +17,6 @@ import java.util.*;
 public class Card {
 
     @Id
-    @GeneratedValue(generator = "UUID")
     private UUID id;
     private String name;
     private LocalDate released_at;
@@ -31,14 +30,23 @@ public class Card {
     private String produced_mana;
 
     public List<String> getColor_identity() {
+        if(Objects.isNull(color_identity)) {
+            return new ArrayList<>();
+        }
         return Arrays.asList(color_identity.split(","));
     }
 
     public List<String> getColors() {
+        if(Objects.isNull(colors)) {
+            return new ArrayList<>();
+        }
         return Arrays.asList(colors.split(","));
     }
 
     public List<String> getProduced_mana() {
+        if(Objects.isNull(produced_mana)) {
+            return new ArrayList<>();
+        }
         return Arrays.asList(produced_mana.split(","));
     }
 

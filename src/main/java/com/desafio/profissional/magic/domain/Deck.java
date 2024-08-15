@@ -34,7 +34,7 @@ public class Deck {
             inverseJoinColumns = @JoinColumn(name = "card_id"))
     private List<Card> cards;
 
-    @OneToOne
+    @OneToOne(mappedBy = "deck")
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties(value = {"deck"})
     private User user;

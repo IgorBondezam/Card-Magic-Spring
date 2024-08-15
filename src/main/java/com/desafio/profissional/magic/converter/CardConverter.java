@@ -29,7 +29,8 @@ public class CardConverter {
                 card.getName(),
                 card.getCmc(),
                 card.getType_line(),
-                card.getColors()
+                card.getColors(),
+                card.getColor_identity()
         );
     }
 }

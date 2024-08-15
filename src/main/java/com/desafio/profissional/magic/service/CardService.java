@@ -1,6 +1,7 @@
 package com.desafio.profissional.magic.service;
 
 import com.desafio.profissional.magic.converter.CardConverter;
+import com.desafio.profissional.magic.domain.Card;
 import com.desafio.profissional.magic.domain.record.API.CardAPI;
 import com.desafio.profissional.magic.exception.MagicValidatorException;
 import com.desafio.profissional.magic.repository.CardRepository;
@@ -37,7 +38,9 @@ public class CardService {
         return card;
     }
 
-    public List<CardAPI> getCardByCommanderColor(String colorsFilter) throws IOException {
+
+
+    public List<CardAPI> populetedByCommanderColor(String colorsFilter) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         String uri = "https://api.scryfall.com/cards/search?q=commander:"+colorsFilter;
         RestTemplate restTemplate = new RestTemplate();
@@ -47,5 +50,10 @@ public class CardService {
         objectMapper.writeValue(new File("card.json"), cards);
         cards.forEach(c -> repository.save(CardConverter.fromCardApiToCard(c)));
         return cards;
+    }
+
+    public List<CardAPI> getCardLimitDeckByCommander(Card commander) throws IOException {
+        String colors = String.join("", commander.getColors());
+        return populetedByCommanderColor(colors);
     }
 }

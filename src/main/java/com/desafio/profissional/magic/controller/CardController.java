@@ -20,12 +20,12 @@ public class CardController {
     private CardService service;
 
     @GetMapping("commander/{name}")
-    public ResponseEntity<CardAPI> getCards(@PathVariable("name") String name) throws IOException, MagicValidatorException {
+    public ResponseEntity<CardAPI> getCommanderByName(@PathVariable("name") String name) throws IOException, MagicValidatorException {
         return ResponseEntity.ok(service.getCommanderByName(name));
     }
 
     @GetMapping("color")
-    public ResponseEntity<List<CardAPI>> getCardsByCommanderColor(@RequestParam("colors") List<ColorCard> colors) throws IOException {
-        return ResponseEntity.ok(service.getCardByCommanderColor(colors.stream().map(ColorCard::getAcronym).collect(Collectors.joining(""))));
+    public ResponseEntity<List<CardAPI>> populetedByCommanderColor(@RequestParam("colors") List<ColorCard> colors) throws IOException {
+        return ResponseEntity.ok(service.populetedByCommanderColor(colors.stream().map(ColorCard::getAcronym).collect(Collectors.joining(""))));
     }
 }

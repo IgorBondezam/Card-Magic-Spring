@@ -43,12 +43,13 @@ public class DeckService {
         if(Objects.isNull(actualDeck.getCommander())){
             throw new MagicValidatorException("Commander doesn't hava been set yet.");
         }
-        actualDeck.setCards(cardService.getCardByCommanderColor(
-                String.join("", actualDeck.getCommander().getColors()))
-                .stream().map(CardConverter::fromCardApiToCard).toList().subList(0, 99));
+        actualDeck.getCards().clear();
+        actualDeck.getCards().addAll(cardService.getCardLimitDeckByCommander(actualDeck.getCommander())
+                .stream().map(CardConverter::fromCardApiToCard).toList().subList(0,99));
+        repository.save(actualDeck);
     }
 
-    public void createDeck(Deck deck, Long userId) throws MagicValidatorException, UserException {
+    public void createDeck(Deck deck, Long userId) throws MagicValidatorException {
         if(userRepository.hasUserWithoutDeck(userId)){
             throw new MagicValidatorException("This player already has a deck");
         }
