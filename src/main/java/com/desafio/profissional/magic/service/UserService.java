@@ -2,12 +2,15 @@ package com.desafio.profissional.magic.service;
 
 import com.desafio.profissional.magic.converter.UserConverter;
 import com.desafio.profissional.magic.domain.User;
+import com.desafio.profissional.magic.domain.record.UserRecordReq;
+import com.desafio.profissional.magic.domain.record.UserRecordRes;
 import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -45,6 +48,10 @@ public class UserService {
             throw new UserException("Error to find the user. This player doens't exists!");
         }
         return user.get();
+    }
+
+    public List<UserRecordReq> findAll() {
+        return repository.findAllRes();
     }
 
     private String passwordEncoder(String password) {

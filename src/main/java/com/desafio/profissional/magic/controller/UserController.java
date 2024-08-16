@@ -54,5 +54,13 @@ public class UserController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity findByAll() {
+        try {
+            return ResponseEntity.ok(service.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
 
 }

@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    container_name: spring_magic_postegres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: spring_magic
+      POSTGRES_DB: spring_magic
+      POSTGRES_PASSWORD: 12345
