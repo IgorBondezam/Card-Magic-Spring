@@ -35,10 +35,10 @@ public class UserController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity updateUser(@RequestBody UserRecordReq record) throws UserException {
+    @PutMapping("/{id}")
+    public ResponseEntity updateUser(@PathVariable("id") Long id, @RequestBody UserRecordReq record) {
         try {
-            service.save(UserConverter.fromReqToUser(record));
+            service.update(id, UserConverter.fromReqToUser(record));
             return ResponseEntity.ok("Your User has been updated.");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable("id") Long id) throws UserException {
+    public ResponseEntity findById(@PathVariable("id") Long id) {
         try {
             return ResponseEntity.ok(UserConverter.toResFromUser(service.findById(id)));
         } catch (Exception e) {

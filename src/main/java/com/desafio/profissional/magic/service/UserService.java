@@ -21,9 +21,9 @@ public class UserService {
     private DeckService deckService;
 
     public User save(User user) throws UserException {
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setPassword(passwordEncoder(user.getPassword()));
         try{
-            if(Objects.nonNull(user.getId()) && Objects.isNull(user.getDeck())) {
+            if(isCreatedUserAndDeckIsNull(user)) {
                 user.setDeck(deckService.findDeckByUserId(user.getId()));
             }
             return repository.save(user);
@@ -32,11 +32,26 @@ public class UserService {
         }
     }
 
+    public User update(Long id, User newUser) throws UserException {
+        User user = findById(id);
+        user.setEmail(newUser.getEmail());
+        user.setPassword(newUser.getPassword());
+        return save(user);
+    }
+
     public User findById(Long id) throws UserException {
         Optional<User> user = repository.findById(id);
         if(user.isEmpty()){
             throw new UserException("Error to find the user. This player doens't exists!");
         }
         return user.get();
+    }
+
+    private String passwordEncoder(String password) {
+        return new BCryptPasswordEncoder().encode(password);
+    }
+
+    private boolean isCreatedUserAndDeckIsNull(User user) {
+        return Objects.nonNull(user.getId()) && Objects.isNull(user.getDeck());
     }
 }
