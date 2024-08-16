@@ -3,6 +3,7 @@ package com.desafio.profissional.magic.service;
 import com.desafio.profissional.magic.converter.CardConverter;
 import com.desafio.profissional.magic.domain.Card;
 import com.desafio.profissional.magic.domain.record.API.CardAPI;
+import com.desafio.profissional.magic.domain.record.CardRecordRes;
 import com.desafio.profissional.magic.exception.MagicValidatorException;
 import com.desafio.profissional.magic.repository.CardRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,10 @@ public class CardService {
     @Autowired
     private CardRepository repository;
 
+    public List<CardRecordRes> findAll() {
+        return repository.findAll().stream().map(CardConverter::toResFromCard).toList();
+    }
+
     public CardAPI getCommanderByName(String name) throws IOException, MagicValidatorException {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         String uri = "https://api.scryfall.com/cards/named?fuzzy="+name;
@@ -37,8 +42,6 @@ public class CardService {
         repository.save(CardConverter.fromCardApiToCard(card));
         return card;
     }
-
-
 
     public List<CardAPI> populetedByCommanderColor(String colorsFilter) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());

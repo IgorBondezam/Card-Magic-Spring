@@ -20,17 +20,16 @@ public class UserService {
     @Autowired
     private DeckService deckService;
 
-    public String save(User user) throws UserException {
+    public User save(User user) throws UserException {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         try{
             if(Objects.nonNull(user.getId()) && Objects.isNull(user.getDeck())) {
                 user.setDeck(deckService.findDeckByUserId(user.getId()));
             }
-            repository.save(user);
+            return repository.save(user);
         } catch (Exception e){
             throw new UserException("Error to save the user. Try again later");
         }
-        return "Your User has been saved.";
     }
 
     public User findById(Long id) throws UserException {
@@ -39,9 +38,5 @@ public class UserService {
             throw new UserException("Error to find the user. This player doens't exists!");
         }
         return user.get();
-    }
-
-    public Boolean hasUserWithoutDeck(Long id) {
-        return repository.hasUserWithoutDeck(id);
     }
 }

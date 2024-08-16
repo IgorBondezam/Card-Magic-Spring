@@ -53,7 +53,7 @@ public class DeckService {
         repository.save(actualDeck);
     }
 
-    public void createDeck(Deck deck, Long userId) throws MagicValidatorException {
+    public Deck createDeck(Deck deck, Long userId) throws MagicValidatorException {
         if(userRepository.hasUserWithoutDeck(userId)){
             throw new MagicValidatorException("This player already has a deck");
         }
@@ -63,5 +63,6 @@ public class DeckService {
         Deck saved = repository.save(deck);
         user.setDeck(saved);
         userRepository.save(user);
+        return saved;
     }
 }

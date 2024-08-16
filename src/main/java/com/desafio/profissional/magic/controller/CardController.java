@@ -2,6 +2,7 @@ package com.desafio.profissional.magic.controller;
 
 import com.desafio.profissional.magic.domain.enums.ColorCard;
 import com.desafio.profissional.magic.domain.record.API.CardAPI;
+import com.desafio.profissional.magic.domain.record.CardRecordRes;
 import com.desafio.profissional.magic.exception.MagicValidatorException;
 import com.desafio.profissional.magic.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,29 @@ public class CardController {
     private CardService service;
 
     @GetMapping("commander/{name}")
-    public ResponseEntity<CardAPI> getCommanderByName(@PathVariable("name") String name) throws IOException, MagicValidatorException {
-        return ResponseEntity.ok(service.getCommanderByName(name));
+    public ResponseEntity getCommanderByName(@PathVariable("name") String name) {
+        try {
+            return ResponseEntity.ok(service.getCommanderByName(name));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     @GetMapping("color")
-    public ResponseEntity<List<CardAPI>> populetedByCommanderColor(@RequestParam("colors") List<ColorCard> colors) throws IOException {
-        return ResponseEntity.ok(service.populetedByCommanderColor(colors.stream().map(ColorCard::getAcronym).collect(Collectors.joining(""))));
+    public ResponseEntity populetedByCommanderColor(@RequestParam("colors") List<ColorCard> colors) {
+        try {
+            return ResponseEntity.ok(service.populetedByCommanderColor(colors.stream().map(ColorCard::getAcronym).collect(Collectors.joining(""))));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity findAllCards() {
+        try {
+            return ResponseEntity.ok(service.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 }

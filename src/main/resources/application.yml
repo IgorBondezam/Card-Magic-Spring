@@ -11,9 +11,9 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/spring_magic
-    username: spring_magic
-    password: 12345
+    url: jdbc:postgresql://${POSTG_HOST:localhost}:${POSTG_PORT:5432}/spring_magic
+    username: ${POSTG_USER:spring_magic}
+    password: ${POSTG_PASSWORD:12345}
     driver-class-name: org.postgresql.Driver
 
 api:

@@ -1,5 +1,17 @@
 version: "3.9"
 services:
+  springboot-app:
+    image: magic_img
+    restart: always
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      POSTG_HOST: spring_magic_postegres
+      POSTG_PORT: 5432
+      POSTG_USER: spring_magic
+      POSTG_PASSWORD: 12345
+
   db:
     image: postgres
     container_name: spring_magic_postegres
