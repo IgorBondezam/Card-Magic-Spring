@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    User findByEmail(String email);
+
     @Query("select count(u.id) > 0 from User u where u.id = :id and u.deck is not null  ")
     Boolean hasUserWithoutDeck(@Param("id") Long id);
 }

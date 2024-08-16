@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class DeckService {
@@ -31,6 +32,9 @@ public class DeckService {
 
     public void setCommanderOnDeckByName(Long userId, String name) throws IOException, MagicValidatorException {
         Deck actualDeck = findDeckByUserId(userId);
+        if(Objects.isNull(actualDeck)){
+            throw new MagicValidatorException("Deck doesn't have been set yet.");
+        }
         actualDeck.setCommander(CardConverter.fromCardApiToCard(cardService.getCommanderByName(name)));
         repository.save(actualDeck);
     }
@@ -53,7 +57,8 @@ public class DeckService {
         if(userRepository.hasUserWithoutDeck(userId)){
             throw new MagicValidatorException("This player already has a deck");
         }
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new MagicValidatorException("There isn't any player with this id"));
         deck.setUser(user);
         Deck saved = repository.save(deck);
         user.setDeck(saved);

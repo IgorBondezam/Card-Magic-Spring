@@ -15,3 +15,7 @@ spring:
     username: spring_magic
     password: 12345
     driver-class-name: org.postgresql.Driver
+
+api:
+  security:
+    token: ${JWT_SECRET:teste12345}

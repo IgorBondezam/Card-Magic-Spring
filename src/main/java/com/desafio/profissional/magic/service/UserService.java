@@ -5,6 +5,7 @@ import com.desafio.profissional.magic.domain.User;
 import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -20,6 +21,7 @@ public class UserService {
     private DeckService deckService;
 
     public String save(User user) throws UserException {
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         try{
             if(Objects.nonNull(user.getId()) && Objects.isNull(user.getDeck())) {
                 user.setDeck(deckService.findDeckByUserId(user.getId()));
