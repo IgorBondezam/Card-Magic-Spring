@@ -32,8 +32,12 @@
             </not>
         </preConditions>
         <createTable tableName="DECK_CARD">
-            <column name="DECK_ID" type="${numerico}"/>
-            <column name="CARD_ID" type="${UUID}"/>
+            <column name="DECK_ID" type="${numerico}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CARD_ID" type="${UUID}">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addPrimaryKey tableName="DECK_CARD" columnNames="DECK_ID, CARD_ID"/>
