@@ -46,4 +46,14 @@ public class CardController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
+
+    @PostMapping("/json/{userId}")
+    public ResponseEntity createJsonCardsByUserId(@PathVariable("userId") Long userId) {
+        try {
+            service.createJsonCardsByUserId(userId);
+            return ResponseEntity.ok().body("File Json is created");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
 }
