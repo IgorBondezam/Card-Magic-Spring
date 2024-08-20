@@ -11,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DeckService {
@@ -30,12 +29,21 @@ public class DeckService {
         return repository.findDeckByUserId(userId);
     }
 
-    public void setCommanderOnDeckByName(Long userId, String name) throws IOException, MagicValidatorException {
+    public void setCommanderOnDeckByName(Long userId, String name) throws MagicValidatorException {
+        List<String> colors = new ArrayList<>();
+
         Deck actualDeck = findDeckByUserId(userId);
         if(Objects.isNull(actualDeck)){
             throw new MagicValidatorException("Deck doesn't have been set yet.");
         }
+
+        if(Objects.nonNull(actualDeck.getCommander())){
+            colors = actualDeck.getCommander().getColors();
+        }
         actualDeck.setCommander(CardConverter.fromCardApiToCard(cardService.getCommanderByName(name)));
+        if(Objects.nonNull(actualDeck.getCommander()) && new HashSet<>(actualDeck.getCommander().getColors()).containsAll(colors)){
+            actualDeck.getCards().clear();
+        }
         repository.save(actualDeck);
     }
 
