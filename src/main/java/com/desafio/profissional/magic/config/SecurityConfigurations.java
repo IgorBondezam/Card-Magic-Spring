@@ -30,6 +30,11 @@ public class SecurityConfigurations {
                 })
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/user").permitAll();
+                })
+                .authorizeHttpRequests(req -> {
+                    req.requestMatchers( "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
+                })
+                .authorizeHttpRequests(req -> {
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter,  UsernamePasswordAuthenticationFilter.class)

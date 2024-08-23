@@ -6,6 +6,8 @@ import com.desafio.profissional.magic.domain.record.UserRecordReq;
 import com.desafio.profissional.magic.domain.record.UserRecordRes;
 import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity updateUser(@PathVariable("id") Long id, @RequestBody UserRecordReq record) {
         try {
             service.update(id, UserConverter.fromReqToUser(record));
@@ -46,6 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity findById(@PathVariable("id") Long id) {
         try {
             return ResponseEntity.ok(UserConverter.toResFromUser(service.findById(id)));
@@ -55,6 +59,7 @@ public class UserController {
     }
 
     @GetMapping
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity findByAll() {
         try {
             return ResponseEntity.ok(service.findAll());

@@ -6,6 +6,8 @@ import com.desafio.profissional.magic.domain.record.DeckRecordReq;
 import com.desafio.profissional.magic.exception.MagicValidatorException;
 import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.service.DeckService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/deck")
+@SecurityRequirement(name = "bearer-key")
 public class DeckController {
 
     @Autowired
