@@ -30,13 +30,13 @@ public class SecurityFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = getToken(request);
         if(Objects.nonNull(token)){
-            String subject = tokenService.validToken(token);
+            String subject = tokenService.validToken(token); //pega as informações do token
             User user = userRepository.findByEmail(subject);
-            var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            SecurityContextHolder.getContext().setAuthentication(auth); //seta as informações do usuário que estava no token no contexto para o spring security conseguir fazer as próximas validações (ter o usuário no contexto para ver se é válido, sem esse cara ele n vai ter o usuário com isso quebrar as validações se está logado e tem permissão)
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response); // executa o próximo filtro
     }
 
     private String getToken(HttpServletRequest request) {

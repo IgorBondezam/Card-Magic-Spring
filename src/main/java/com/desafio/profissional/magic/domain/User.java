@@ -1,5 +1,6 @@
 package com.desafio.profissional.magic.domain;
 
+import com.desafio.profissional.magic.domain.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -40,9 +41,14 @@ public class User implements UserDetails {
     @JsonIgnoreProperties(value = {"user"})
     private Deck deck;
 
+    private UserRole role;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+//        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return this.role == UserRole.ADMIN ? List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")) :
+                List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override

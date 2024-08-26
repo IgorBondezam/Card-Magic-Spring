@@ -3,6 +3,7 @@ package com.desafio.profissional.magic.controller;
 import com.desafio.profissional.magic.domain.User;
 import com.desafio.profissional.magic.domain.record.UserLogin;
 import com.desafio.profissional.magic.service.auth.TokenService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -29,7 +30,7 @@ public class AuthController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity makeLogin(@RequestBody UserLogin user) {
+    public ResponseEntity makeLogin(@RequestBody @Valid UserLogin user) {
         var token = new UsernamePasswordAuthenticationToken(user.email(), user.password());
         Authentication authentication = manager.authenticate(token);
         return ResponseEntity.ok(tokenService.createToken((User) authentication.getPrincipal()));

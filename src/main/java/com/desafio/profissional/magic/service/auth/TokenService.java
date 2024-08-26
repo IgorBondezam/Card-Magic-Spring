@@ -22,12 +22,12 @@ public class TokenService {
 
     public String createToken(User user) {
         try{
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+            Algorithm algorithm = Algorithm.HMAC256(secret); //SEGREDO VINDO DAS VARIAVEIS DE AMBIENTE
             return  JWT.create()
-                    .withIssuer("MTG")
-                    .withSubject(user.getEmail())
+                    .withIssuer("MTG") //QUEM CRIOU O TOKEN
+                    .withSubject(user.getEmail()) //USUARIO QUE RECEBE O TOKEN
                     .withClaim("id", user.getId())
-                    .withExpiresAt(dateExpiration())
+                    .withExpiresAt(dateExpiration()) //QUANDO SERÁ EXPIRADO
                     .sign(algorithm);
         } catch (JWTCreationException exception){
             throw new RuntimeException("Error to generate token: ", exception);

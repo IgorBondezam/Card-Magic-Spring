@@ -1,9 +1,7 @@
 package com.desafio.profissional.magic.service;
 
-import com.desafio.profissional.magic.converter.UserConverter;
 import com.desafio.profissional.magic.domain.User;
-import com.desafio.profissional.magic.domain.record.UserRecordReq;
-import com.desafio.profissional.magic.domain.record.UserRecordRes;
+import com.desafio.profissional.magic.domain.record.UserInfoRecordRes;
 import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +48,11 @@ public class UserService {
         return user.get();
     }
 
-    public List<UserRecordReq> findAll() {
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
+    public List<UserInfoRecordRes> findAll() {
         return repository.findAllRes();
     }
 

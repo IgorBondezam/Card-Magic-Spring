@@ -27,14 +27,10 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/login").permitAll();
-                })
-                .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/user").permitAll();
-                })
-                .authorizeHttpRequests(req -> {
+                    req.requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.GET, "/user").hasRole("ADMIN");
                     req.requestMatchers( "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
-                })
-                .authorizeHttpRequests(req -> {
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter,  UsernamePasswordAuthenticationFilter.class)

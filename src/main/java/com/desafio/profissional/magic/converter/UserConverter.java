@@ -10,9 +10,9 @@ public class UserConverter {
 
     public static User fromReqToUser(UserRecordReq record){
         return User.builder()
-                .id(record.id())
                 .email(record.email())
                 .password(record.password())
+                .role(record.role())
                 .build();
     }
 
