@@ -1,8 +1,6 @@
 package com.desafio.profissional.magic.domain;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -19,42 +17,57 @@ public class Card {
     @Id
     private UUID id;
     private String name;
-    private LocalDate released_at;
+    private String imageUrl;
     private Double cmc;
-    private String type_line;
-    private String mana_cost;
-    private String oracle_text;
+    private String manaCost;
+    private String text;
 
-    private String color_identity;
+    private String superTypes;
+    private String types;
+    private String subTypes;
+    private String colorIdentity;
     private String colors;
-    private String produced_mana;
 
-    public List<String> getColor_identity() {
-        if(Objects.isNull(color_identity)) {
+    public List<String> getColorIdentity() {
+        if(Objects.isNull(this.colorIdentity)) {
             return new ArrayList<>();
         }
-        return Arrays.asList(color_identity.split(","));
+        return Arrays.asList(this.colorIdentity.split(","));
     }
 
     public List<String> getColors() {
-        if(Objects.isNull(colors)) {
+        if(Objects.isNull(this.colors)) {
             return new ArrayList<>();
         }
-        return Arrays.asList(colors.split(","));
+        return Arrays.asList(this.colors.split(","));
     }
 
-    public List<String> getProduced_mana() {
-        if(Objects.isNull(produced_mana)) {
+    public List<String> getSuperTypes() {
+        if(Objects.isNull(this.superTypes)) {
             return new ArrayList<>();
         }
-        return Arrays.asList(produced_mana.split(","));
+        return Arrays.asList(this.superTypes.split(","));
     }
 
-    public void setColor_identity(List<String> color_identity) {
+    public List<String> getTypes() {
+        if(Objects.isNull(this.types)) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(this.types.split(","));
+    }
+
+    public List<String> getSubTypes() {
+        if(Objects.isNull(this.subTypes)) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(this.subTypes.split(","));
+    }
+
+    public void setColorIdentity(List<String> color_identity) {
         if(Objects.isNull(color_identity)) {
             return;
         }
-        this.color_identity = String.join(",", color_identity);
+        this.colorIdentity = String.join(",", color_identity);
     }
 
     public void setColors(List<String> colors) {
@@ -64,10 +77,24 @@ public class Card {
         this.colors = String.join(",", colors);
     }
 
-    public void setProduced_mana(List<String> produced_mana) {
-        if(Objects.isNull(produced_mana)) {
+    public void setSuperTypes(List<String> superTypes) {
+        if(Objects.isNull(superTypes)) {
             return;
         }
-        this.produced_mana = String.join(",", produced_mana);
+        this.superTypes = String.join(",", superTypes);
+    }
+
+    public void setTypes(List<String> types) {
+        if(Objects.isNull(types)) {
+            return;
+        }
+        this.types = String.join(",", types);
+    }
+
+    public void setSubTypes(List<String> subTypes) {
+        if(Objects.isNull(subTypes)) {
+            return;
+        }
+        this.subTypes = String.join(",", subTypes);
     }
 }

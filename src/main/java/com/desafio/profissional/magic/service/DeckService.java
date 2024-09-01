@@ -40,14 +40,14 @@ public class DeckService {
         if(Objects.nonNull(actualDeck.getCommander())){
             colors = actualDeck.getCommander().getColors();
         }
-        actualDeck.setCommander(CardConverter.fromCardApiToCard(cardService.getCommanderByName(name)));
+        actualDeck.setCommander(cardService.getCommanderByName(name));
         if(Objects.nonNull(actualDeck.getCommander()) && new HashSet<>(actualDeck.getCommander().getColors()).containsAll(colors)){
             actualDeck.getCards().clear();
         }
         repository.save(actualDeck);
     }
 
-    public void set99Cards(Long userId) throws MagicValidatorException, IOException {
+    public void set99Cards(Long userId) throws MagicValidatorException {
         Deck actualDeck = findDeckByUserId(userId);
         if(Objects.isNull(actualDeck)){
             throw new MagicValidatorException("Deck doesn't have been set yet.");
@@ -56,8 +56,7 @@ public class DeckService {
             throw new MagicValidatorException("Commander doesn't hava been set yet.");
         }
         actualDeck.getCards().clear();
-        actualDeck.getCards().addAll(cardService.getCardLimitDeckByCommander(actualDeck.getCommander())
-                .stream().map(CardConverter::fromCardApiToCard).toList().subList(0,99));
+        actualDeck.getCards().addAll(cardService.getCardLimitDeckByCommander(actualDeck.getCommander()).subList(0,99));
         repository.save(actualDeck);
     }
 

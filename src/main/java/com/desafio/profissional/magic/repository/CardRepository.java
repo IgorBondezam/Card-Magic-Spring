@@ -25,4 +25,14 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
             " where u.id = :userId")
     Card findCommanderByUserId(@Param("userId") Long userId);
 
+    @Query("select c " +
+            " from Card c " +
+            " where c.superTypes ilike ('legendary') and c.name ilike CONCAT('%',UPPER(:name),'%')")
+    List<Card> findCommanderByName(@Param("name") String name);
+
+    @Query("select c " +
+            " from Card c " +
+            " where c.superTypes not ilike ('legendary') and c.colors ilike CONCAT('%',UPPER(:color),'%')")
+    List<Card> findNotCommanderByColor(@Param("color") String color);
+
 }

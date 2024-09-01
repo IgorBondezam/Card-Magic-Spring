@@ -14,15 +14,15 @@
                 <constraints primaryKeyName="PK_CARD" primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="${texto255}"/>
-            <column name="released_at" type="${data}"/>
-            <column name="cmc" type="${numericoDecimal}"/>
-            <column name="type_line" type="${texto255}"/>
+            <column name="image_url" type="${texto255}"/>
+            <column name="cmc" type="${numericoDecimalLargePrecision}"/>
             <column name="mana_cost" type="${texto255}"/>
-            <column name="oracle_text" type="${texto4000}"/>
-
+            <column name="text" type="${texto4000}"/>
+            <column name="super_types" type="${texto255}"/>
+            <column name="types" type="${texto255}"/>
+            <column name="sub_types" type="${texto255}"/>
             <column name="color_identity" type="${texto255}"/>
             <column name="colors" type="${texto255}"/>
-            <column name="produced_mana" type="${texto255}"/>
         </createTable>
     </changeSet>
 

@@ -6,6 +6,7 @@
 
     <property name="numerico" value="numeric(10,0)"/>
     <property name="numericoDecimal" value="numeric(10,4)"/>
+    <property name="numericoDecimalLargePrecision" value="numeric(16,8)"/>
     <property name="sequence" value="bigint"/>
 
     <property name="UUID" value="UUID"/>

@@ -1,3 +1,5 @@
+supertypes=legendary&page=121 pages legendary
+page=937 pages all cards
 # Getting Started
 
 ### Reference Documentation

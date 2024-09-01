@@ -9,8 +9,12 @@ import java.util.UUID;
 public record CardRecordRes(
         UUID id,
         String name,
+        String imageUrl,
         Double cmc,
-        String type_line,
+        String text,
+        List<String> superTypes,
+        List<String> types,
+        List<String> subTypes,
         List<String> colors,
         List<String> color_identity
 ) {
