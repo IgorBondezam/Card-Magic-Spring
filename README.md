@@ -34,10 +34,9 @@ These additional references should also help you:
 ## 🏁
 
 ### To Start
-- Run `./gradlew clean build` to build the project, setup de dependencies and create a `.jar`
-- Execute the docker compose up.
-  - This will start the database and the spring project.
-  - The values of hots, ports, user and password is in `docker-compese.yml`
+- Execute the `docker compose up`.
+  - This will start the database, compile and start the spring project.
+  - The values of host, ports, user and password is in `docker-compese.yml`
 ---
 ### Here you are some end-points
 
@@ -71,3 +70,17 @@ Deck
 - ### Patch
   - http://localhost:8080/deck/choose/commander/{userId}/{commander's_name}
   - http://localhost:8080/deck/choose/random/99/{userId}
+
+---
+
+Spring Documentation (Swagger)
+-
+
+- After projects run, you can acess http://localhost:8080/swagger-ui/index.html to run the end-points.
+
+---
+
+Seed 🌱 
+-
+
+- After login with an admin, make sure you run the seed end-point (`/card/seed`) to use the others functions.
