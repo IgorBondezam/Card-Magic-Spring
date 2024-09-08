@@ -20,7 +20,7 @@ spring:
     password: ${POSTG_PASSWORD:12345}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 100
+      maximum-pool-size: 95
 
 api:
   security:
