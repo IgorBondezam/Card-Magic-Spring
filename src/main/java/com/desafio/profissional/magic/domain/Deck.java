@@ -7,13 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Deck {
+public class Deck implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deck_sequence")
@@ -27,14 +28,14 @@ public class Deck {
     @JoinColumn(name = "commander")
     private Card commander;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "deck_card",
             joinColumns = @JoinColumn(name = "decK_id"),
             inverseJoinColumns = @JoinColumn(name = "card_id"))
     private List<Card> cards;
 
-    @OneToOne(mappedBy = "deck")
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties(value = {"deck"})
     private User user;

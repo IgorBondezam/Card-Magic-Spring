@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -12,7 +13,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Card {
+public class Card implements Serializable {
 
     @Id
     private UUID id;

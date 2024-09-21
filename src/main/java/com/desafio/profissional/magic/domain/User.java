@@ -1,7 +1,9 @@
 package com.desafio.profissional.magic.domain;
 
 import com.desafio.profissional.magic.domain.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,11 +11,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,7 +26,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "userplayer")
-public class User implements UserDetails {
+@JsonIgnoreProperties(ignoreUnknown = true, value = {"authorities"})
+public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userplayer_sequence")
     @SequenceGenerator(allocationSize = 1, name = "userplayer_sequence", sequenceName ="userplayer_sequence" )
@@ -36,17 +40,14 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
-    @OneToOne
-    @JoinColumn(name = "deck_id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = {"user"})
-    private Deck deck;
+    private List<Deck> deck = new ArrayList<>();
 
     private UserRole role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-
         return this.role == UserRole.ADMIN ? List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")) :
                 List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }

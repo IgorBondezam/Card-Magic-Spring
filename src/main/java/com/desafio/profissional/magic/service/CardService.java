@@ -11,6 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class CardService {
     @Value("${api.utils.totalPage}")
     private Long totalPage;
 
+    @Cacheable(cacheNames = "cardCache", key = "#root.method.name + #id")
     public List<CardRecordRes> findAll() {
         return repository.findAll().stream().map(CardConverter::toResFromCard).toList();
     }

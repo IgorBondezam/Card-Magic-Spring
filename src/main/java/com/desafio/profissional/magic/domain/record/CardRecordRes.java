@@ -2,11 +2,12 @@ package com.desafio.profissional.magic.domain.record;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record CardRecordRes(
+public record CardRecordRes (
         UUID id,
         String name,
         String imageUrl,

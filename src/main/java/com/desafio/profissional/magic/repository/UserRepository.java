@@ -2,8 +2,6 @@ package com.desafio.profissional.magic.repository;
 
 import com.desafio.profissional.magic.domain.User;
 import com.desafio.profissional.magic.domain.record.UserInfoRecordRes;
-import com.desafio.profissional.magic.domain.record.UserRecordReq;
-import com.desafio.profissional.magic.domain.record.UserRecordRes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,7 +21,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "u.role) " +
             "from User u")
     List<UserInfoRecordRes> findAllRes();
-
-    @Query("select count(u.id) > 0 from User u where u.id = :id and u.deck is not null  ")
-    Boolean hasUserWithoutDeck(@Param("id") Long id);
 }

@@ -43,19 +43,6 @@
         <addPrimaryKey tableName="DECK_CARD" columnNames="DECK_ID, CARD_ID"/>
     </changeSet>
 
-    <changeSet id="3" author="igor.bondezam">
-        <preConditions onFail="MARK_RAN" onFailMessage="The column deck_id already exists">
-            <not>
-                <columnExists columnName="deck_id" tableName="userplayer"/>
-            </not>
-        </preConditions>
-        <addColumn tableName="userplayer">
-            <column name="DECK_ID" type="${numerico}">
-                <constraints foreignKeyName="FK_USER_DECK"/>
-            </column>
-        </addColumn>
-    </changeSet>
-
     <changeSet id="4" author="igor.bondezam">
         <preConditions onFail="MARK_RAN"  onFailMessage="The sequence deck_sequence already exists">
             <not>

@@ -6,5 +6,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record DeckRecordRes(CardRecordRes commander, List<CardRecordRes> cards) {
+public record DeckRecordRes(String deckName, CardRecordRes commander, List<CardRecordRes> cards) {
 }

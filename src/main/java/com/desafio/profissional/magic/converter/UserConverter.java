@@ -4,8 +4,6 @@ import com.desafio.profissional.magic.domain.User;
 import com.desafio.profissional.magic.domain.record.UserRecordReq;
 import com.desafio.profissional.magic.domain.record.UserRecordRes;
 
-import java.util.Objects;
-
 public class UserConverter {
 
     public static User fromReqToUser(UserRecordReq record){
@@ -20,7 +18,7 @@ public class UserConverter {
         return new UserRecordRes(
                 user.getId(),
                 user.getEmail(),
-                Objects.nonNull(user.getDeck()) ? DeckConverter.toResFromDeck(user.getDeck()) : null
+                !user.getDeck().isEmpty() ? user.getDeck().stream().map(DeckConverter::toResFromDeck).toList() : null
         );
     }
 }

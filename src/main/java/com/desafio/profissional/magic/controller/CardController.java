@@ -29,7 +29,7 @@ public class CardController {
     }
 
     @GetMapping("color")
-    public ResponseEntity populetedByCommanderColor(@RequestParam("colors") List<ColorCard> colors) {
+    public ResponseEntity getByCommanderColor(@RequestParam("colors") List<ColorCard> colors) {
         try {
             return ResponseEntity.ok(service.getCardsByCommandColor(colors.stream().map(ColorCard::getAcronym)
                             .collect(Collectors.joining("")))
