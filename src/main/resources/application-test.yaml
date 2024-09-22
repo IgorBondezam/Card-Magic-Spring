@@ -10,5 +10,6 @@ spring:
   liquibase:
     change-log: classpath:db/migration/changelog-master.xml
     enabled: true
+    contexts: test
   application:
     name: teste_test

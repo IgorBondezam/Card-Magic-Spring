@@ -1,0 +1,45 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="1" author="igor.bondezam" context="stressTest">
+        <sql>
+            INSERT INTO card (id, name, image_url, cmc, mana_cost, text, super_types, types, sub_types, color_identity, colors)
+            values (RANDOM_UUID(), 'a', 'a', 1.00000000, 'a', 'a', 'Legendary,Creature', 'Creature', 'Creature', 'B', 'B');
+            INSERT INTO card (id, name, image_url, cmc, mana_cost, text, super_types, types, sub_types, color_identity, colors)
+            SELECT RANDOM_UUID(), 'a', 'a', 1.00000000, 'a', 'a', 'Creature', 'Creature', 'Creature', 'B', 'B'
+            FROM generate_series(1, 99);
+
+            INSERT INTO userplayer(id, email, password, role)
+            VALUES(1, 'igor@gmail.com', '$2a$10$/RAnqXAE197P68g/2RsvTuCscV/bNTEDzw28PZe03A8JBzhE/UsPS', '0');
+            INSERT INTO userplayer(id, email, password, role)
+            VALUES(2, 'teste@gmail.com', '$2a$10$/RAnqXAE197P68g/2RsvTuCscV/bNTEDzw28PZe03A8JBzhE/UsPS', '0');
+            INSERT INTO userplayer(id, email, password, role)
+            VALUES(3, 'mock@gmail.com', '$2a$10$/RAnqXAE197P68g/2RsvTuCscV/bNTEDzw28PZe03A8JBzhE/UsPS', '0');
+
+            INSERT INTO public.deck
+                (id, name, commander, user_id)
+            VALUES(1, 'destruidor de mundos', (select c.id from card c where c.super_types ilike '%legendary%'), 1);
+            INSERT INTO public.deck
+                (id, name, commander, user_id)
+            VALUES(2, 'destruidor de mundos2', (select c.id from card c where c.super_types ilike '%legendary%'), 2);
+            INSERT INTO public.deck
+                (id, name, commander, user_id)
+            VALUES(3, 'destruidor de mundos3', (select c.id from card c where c.super_types ilike '%legendary%'), 3);
+            INSERT INTO public.deck
+                (id, name, commander, user_id)
+            VALUES(4, 'destruidor de mundos4', (select c.id from card c where c.super_types ilike '%legendary%'), 1);
+
+            INSERT INTO deck_card (deck_id, card_id)
+            select 1 deck_id, c.id card_id from card c where c.super_types not ilike '%legendary%';
+            INSERT INTO deck_card (deck_id, card_id)
+            select 2 deck_id, c.id card_id from card c where c.super_types not ilike '%legendary%';
+            INSERT INTO deck_card (deck_id, card_id)
+            select 3 deck_id, c.id card_id from card c where c.super_types not ilike '%legendary%';
+            INSERT INTO deck_card (deck_id, card_id)
+            select 4 deck_id, c.id card_id from card c where c.super_types not ilike '%legendary%';
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -23,4 +23,5 @@ WORKDIR $APP_HOME
 COPY --from=BUILD $APP_HOME/build/libs/$ARTIFACT_NAME .
 
 EXPOSE 8080
-ENTRYPOINT exec java -jar ${ARTIFACT_NAME}
+ENV PROFILE=default
+ENTRYPOINT exec java -Dspring.profiles.active=${PROFILE} -jar ${ARTIFACT_NAME}

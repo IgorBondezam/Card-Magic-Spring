@@ -34,7 +34,6 @@ public class User implements UserDetails, Serializable {
 
     @Email
     @NotBlank
-    @UniqueElements
     private String email;
 
     @NotBlank

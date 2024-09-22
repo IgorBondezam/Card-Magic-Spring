@@ -6,27 +6,27 @@ spring:
   liquibase:
     change-log: classpath:db/migration/changelog-master.xml
     enabled: true
-    contexts: dev
+    contexts: stressTest
   jpa:
-    hibernate.ddl-auto: none
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: false
     show-sql: true
     properties:
       hibernate:
         jdbc:
           batch_size: 500
   datasource:
-    url: jdbc:postgresql://${POSTG_HOST:localhost}:${POSTG_PORT:5432}/spring_magic
-    username: ${POSTG_USER:spring_magic}
-    password: ${POSTG_PASSWORD:12345}
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
     hikari:
       maximum-pool-size: 95
     cache:
       type: redis
     redis:
       host: 127.0.0.1
-      port: 6379
+      port: 6380
 
 api:
   security:
