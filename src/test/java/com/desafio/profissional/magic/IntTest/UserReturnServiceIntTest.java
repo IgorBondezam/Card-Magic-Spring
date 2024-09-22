@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @Transactional
-public class UserServiceIntTest extends ConfigIntTest {
+public class UserReturnServiceIntTest extends ConfigIntTest {
 
     @Autowired
     private UserService service;

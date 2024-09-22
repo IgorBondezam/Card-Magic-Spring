@@ -24,6 +24,15 @@ public class CardConverter {
         return card;
     }
 
+    public static CardAPI fromCardToCardApi(Card card){
+        return new CardAPI(
+                card.getId(), card.getName(), card.getImageUrl(), card.getCmc(),
+                card.getManaCost(), card.getText(), card.getSuperTypes(),
+                card.getTypes(), card.getSubTypes(), card.getColorIdentity(),
+                card.getColors()
+        );
+    }
+
     public static CardRecordRes toResFromCard(Card card){
         return new CardRecordRes(
                 card.getId(),

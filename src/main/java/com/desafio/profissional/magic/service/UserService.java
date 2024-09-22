@@ -5,8 +5,6 @@ import com.desafio.profissional.magic.domain.record.UserInfoRecordRes;
 import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +21,10 @@ public class UserService {
     @Autowired
     private DeckService deckService;
 
-    @CacheEvict(cacheNames = "Usuarios", allEntries = true)
+    public List<UserInfoRecordRes> findAll() {
+        return repository.findAllRes();
+    }
+
     public User save(User user) throws UserException {
         user.setPassword(passwordEncoder(user.getPassword()));
         try{
@@ -35,7 +36,6 @@ public class UserService {
             throw new UserException("Error to save the user. Try again later");
         }
     }
-    @CacheEvict(cacheNames = "Usuarios", allEntries = true)
     public User update(Long id, User newUser) throws UserException {
         User user = findById(id);
         user.setEmail(newUser.getEmail());
@@ -43,7 +43,6 @@ public class UserService {
         return save(user);
     }
 
-    @Cacheable(cacheNames = "userCache", key = "#root.method.name + #id")
     public User findById(Long id) throws UserException {
         Optional<User> user = repository.findById(id);
         if(user.isEmpty()){
@@ -52,14 +51,8 @@ public class UserService {
         return user.get();
     }
 
-    @CacheEvict(cacheNames = "Usuarios", allEntries = true)
     public void deleteById(Long id) {
         repository.deleteById(id);
-    }
-
-    @Cacheable(cacheNames = "Usuarios", key = "#root.method.name")
-    public List<UserInfoRecordRes> findAll() {
-        return repository.findAllRes();
     }
 
     private String passwordEncoder(String password) {

@@ -2,6 +2,7 @@ package com.desafio.profissional.magic.domain.record.API;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,5 +18,5 @@ public record CardAPI(UUID id,
                       List<String> subtypes,
                       List<String> colorIdentity,
                       List<String> colors
-                      ) {
+                      ) implements Serializable {
 }

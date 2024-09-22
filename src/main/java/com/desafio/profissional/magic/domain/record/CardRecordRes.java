@@ -18,5 +18,5 @@ public record CardRecordRes (
         List<String> subTypes,
         List<String> colors,
         List<String> color_identity
-) {
+) implements Serializable {
 }

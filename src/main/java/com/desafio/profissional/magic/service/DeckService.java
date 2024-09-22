@@ -3,10 +3,11 @@ package com.desafio.profissional.magic.service;
 import com.desafio.profissional.magic.converter.CardConverter;
 import com.desafio.profissional.magic.domain.Deck;
 import com.desafio.profissional.magic.domain.User;
+import com.desafio.profissional.magic.domain.record.API.CardAPI;
 import com.desafio.profissional.magic.exception.MagicValidatorException;
-import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.repository.DeckRepository;
 import com.desafio.profissional.magic.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,9 +71,41 @@ public class DeckService {
                 new MagicValidatorException("There isn't any player with this id"));
         deck.setUser(user);
         Deck saved = repository.save(deck);
-        user.getDeck().add(saved);
-        userRepository.save(user);
+//        user.getDeck().add(saved);
+//        userRepository.save(user);
         return saved;
+    }
+
+    public Deck createDeckByFile(Long userId, String deckName, String json) throws IOException, MagicValidatorException {
+        Deck deck = new Deck();
+        deck.setName(deckName);
+        List<CardAPI> cards = readCardFile(json);
+        List<CardAPI> commander = getCommanderInCards(cards);
+        List<String> commanderColor = commander.get(0).colors();
+        cardService.validCommander(commander);
+        deck.setCommander(CardConverter.fromCardApiToCard(commander.get(0)));
+        cards.remove(commander.get(0));
+        validCardsNoCommander(cards, commanderColor);
+        deck.setCards(cards.stream().map(CardConverter::fromCardApiToCard).toList());
+        return createDeck(deck, userId);
+    }
+
+    private void validCardsNoCommander(List<CardAPI> cards, List<String> commanderColor) throws MagicValidatorException {
+        List<CardAPI> invalidCards = cards.stream()
+                .filter(c -> c.colors().stream().noneMatch(commanderColor::contains)).toList();
+        if(!invalidCards.isEmpty()) {
+            throw new MagicValidatorException("There are cards those are out of the commander colors rule");
+        }
+    }
+
+    private List<CardAPI> getCommanderInCards(List<CardAPI> cards) {
+        return cards.stream().filter(c -> c.supertypes().contains("Legendary")).toList();
+    }
+
+    private List<CardAPI> readCardFile(String json) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<CardAPI> cards = new ArrayList<>(Arrays.stream(objectMapper.readValue(json, CardAPI[].class)).toList());
+        return cards;
     }
 
     private void isDeckFromUser(Long deckId, Long userId) throws MagicValidatorException {

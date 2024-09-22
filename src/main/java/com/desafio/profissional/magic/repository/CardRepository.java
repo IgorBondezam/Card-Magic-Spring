@@ -13,26 +13,23 @@ import java.util.UUID;
 public interface CardRepository extends JpaRepository<Card, UUID> {
 
     @Query("select c " +
-            " from Deck d" +
-            " join d.user u" +
+            " from Deck d " +
             " join d.cards c " +
-            " where u.id = :userId")
-    List<Card> findCardByUserId(@Param("userId") Long userId);
+            " where d.id = :deckId")
+    List<Card> findCardsByDeckId(@Param("deckId") Long deckId);
     @Query("select d.commander " +
             " from Deck d" +
-            " join d.user u" +
-            " join d.cards c " +
-            " where u.id = :userId")
-    Card findCommanderByUserId(@Param("userId") Long userId);
+            " where d.id = :deckId")
+    Card findCommanderByDeckId(@Param("deckId") Long deckId);
 
     @Query("select c " +
             " from Card c " +
-            " where c.superTypes ilike ('legendary') and c.name ilike CONCAT('%',UPPER(:name),'%')")
+            " where c.superTypes ilike ('%legendary%') and c.name ilike CONCAT('%',UPPER(:name),'%')")
     List<Card> findCommanderByName(@Param("name") String name);
 
     @Query("select c " +
             " from Card c " +
-            " where c.superTypes not ilike ('legendary') and c.colors ilike CONCAT('%',UPPER(:color),'%')")
+            " where c.superTypes not ilike ('%legendary%') and c.colors ilike CONCAT('%',UPPER(:color),'%')")
     List<Card> findNotCommanderByColor(@Param("color") String color);
 
 }

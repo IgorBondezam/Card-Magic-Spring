@@ -5,20 +5,19 @@ import com.desafio.profissional.magic.domain.Deck;
 import com.desafio.profissional.magic.domain.User;
 import com.desafio.profissional.magic.domain.record.DeckRecordReq;
 import com.desafio.profissional.magic.exception.MagicValidatorException;
-import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.service.DeckService;
-import io.swagger.v3.oas.annotations.Operation;
+import com.desafio.profissional.magic.service.returnService.DeckReturnService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/deck")
@@ -29,11 +28,13 @@ public class DeckController {
     @Autowired
     private DeckService service;
 
+    @Autowired
+    private DeckReturnService returnService;
+
     @GetMapping()
     public ResponseEntity findAllDecks() {
         try {
-            List<Deck> decks = service.findAll();
-            return ResponseEntity.ok(decks.stream().map(DeckConverter::toResFromDeck));
+            return ResponseEntity.ok(returnService.findAll());
         } catch (Exception e) {
             log.error(e.getStackTrace());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -44,8 +45,7 @@ public class DeckController {
     public ResponseEntity findDeckLoggedInUser(Authentication auth) {
         try {
             Long userId = ((User) auth.getPrincipal()).getId();
-            List<Deck> decks = service.findDeckByUserId(userId);
-            return ResponseEntity.ok(decks.stream().map(DeckConverter::toResFromDeck));
+            return ResponseEntity.ok(returnService.findDeckByUserId(userId));
         } catch (Exception e) {
             log.error(e.getStackTrace());
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -76,10 +76,10 @@ public class DeckController {
         }
     }
 
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<String> createDeck(@PathVariable("userId") Long userId, @RequestBody DeckRecordReq req) {
+    @PostMapping("/user")
+    public ResponseEntity<String> createDeck(@RequestBody DeckRecordReq req, Authentication auth) {
         try {
-            Deck saved = service.createDeck(DeckConverter.fromReqToDeck(req), userId);
+            Deck saved = service.createDeck(DeckConverter.fromReqToDeck(req), ((User) auth.getPrincipal()).getId());
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/user/{userId}")
@@ -90,5 +90,16 @@ public class DeckController {
             log.error(e.getStackTrace());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
+    }
+
+    @PostMapping(value = "/import/{deckName}",  consumes = "multipart/form-data")
+    public ResponseEntity importDeck(@PathVariable("deckName") String deckName, @RequestPart("file") MultipartFile document , Authentication auth) throws IOException, MagicValidatorException {
+        Deck deck = service.createDeckByFile(((User) auth.getPrincipal()).getId(), deckName, new String(document.getBytes()));
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/deck/{deckId}")
+                .buildAndExpand(deck.getId())
+                .toUri();
+        return ResponseEntity.created(location).body("Deck has been created");
     }
 }

@@ -3,7 +3,6 @@ package com.desafio.profissional.magic.service;
 import com.desafio.profissional.magic.converter.CardConverter;
 import com.desafio.profissional.magic.domain.Card;
 import com.desafio.profissional.magic.domain.record.API.CardAPI;
-import com.desafio.profissional.magic.domain.record.CardRecordRes;
 import com.desafio.profissional.magic.exception.MagicValidatorException;
 import com.desafio.profissional.magic.repository.CardRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -36,16 +35,15 @@ public class CardService {
     @Value("${api.utils.totalPage}")
     private Long totalPage;
 
-    @Cacheable(cacheNames = "cardCache", key = "#root.method.name + #id")
-    public List<CardRecordRes> findAll() {
-        return repository.findAll().stream().map(CardConverter::toResFromCard).toList();
+    public List<Card> findAll() {
+        return repository.findAll();
     }
 
     public Card getCommanderByName(String name) throws MagicValidatorException {
 
         List<Card> commander = repository.findCommanderByName(name);
         if (commander.isEmpty()) {
-            throw new MagicValidatorException("This card isn't a commander");
+            throw new MagicValidatorException("The card list isn't populeted or this card isn't a commander");
         }
         return commander.get(0);
     }
@@ -78,19 +76,29 @@ public class CardService {
         executor.shutdown();
     }
 
-    public void createJsonCardsByUserId(Long userId) throws IOException {
+    @CacheEvict(cacheNames = "cardCache", allEntries = true)
+    public void createJsonCardsByDeckId(Long deckId) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        List<Card> cards = findCardByUserId(userId);
-        cards.add(findCommanderByUserId(userId));
-        objectMapper.writeValue(new File("card.json"), cards);
+        List<CardAPI> cards = new ArrayList<>(findCardByDeckId(deckId).stream().map(CardConverter::fromCardToCardApi).toList());
+        cards.add(CardConverter.fromCardToCardApi(findCommanderByDeckId(deckId)));
+        objectMapper.writeValue(new File("card_deckId_"+deckId+".json"), cards);
     }
 
-    private List<Card> findCardByUserId(Long userId) {
-        return repository.findCardByUserId(userId);
+    public void validCommander(List<CardAPI> commander) throws MagicValidatorException {
+        if(commander.isEmpty()) {
+            throw new MagicValidatorException("This Deck doens't have a commander");
+        }
+        if(commander.size() > 1) {
+            throw new MagicValidatorException("This Deck has more than one commander");
+        }
     }
 
-    private Card findCommanderByUserId(Long userId) {
-        return repository.findCommanderByUserId(userId);
+    private List<Card> findCardByDeckId(Long deckId) {
+        return repository.findCardsByDeckId(deckId);
+    }
+
+    private Card findCommanderByDeckId(Long deckId) {
+        return repository.findCommanderByDeckId(deckId);
     }
 
 

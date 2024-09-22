@@ -3,9 +3,9 @@ package com.desafio.profissional.magic.controller;
 import com.desafio.profissional.magic.converter.UserConverter;
 import com.desafio.profissional.magic.domain.User;
 import com.desafio.profissional.magic.domain.record.UserRecordReq;
-import com.desafio.profissional.magic.domain.record.UserRecordRes;
 import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.service.UserService;
+import com.desafio.profissional.magic.service.returnService.UserReturnService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    private UserReturnService returnService;
 
     @PostMapping
     public ResponseEntity createUser(@RequestBody UserRecordReq record) {
@@ -50,19 +53,16 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity findById(@PathVariable("id") Long id) {
-        try {
-            return ResponseEntity.ok(UserConverter.toResFromUser(service.findById(id)));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+    public ResponseEntity findById(@PathVariable("id") Long id) throws UserException {
+            return ResponseEntity.ok(returnService.findById(id));
+
     }
 
     @GetMapping
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public ResponseEntity findByAll() {
         try {
-            return ResponseEntity.ok(service.findAll());
+            return ResponseEntity.ok(returnService.findAll());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

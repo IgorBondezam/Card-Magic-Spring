@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,9 +32,13 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity makeLogin(@RequestBody @Valid UserLogin user) {
-        var token = new UsernamePasswordAuthenticationToken(user.email(), user.password());
-        Authentication authentication = manager.authenticate(token);
-        return ResponseEntity.ok(tokenService.createToken((User) authentication.getPrincipal()));
+        try {
+            var token = new UsernamePasswordAuthenticationToken(user.email(), user.password());
+            Authentication authentication = manager.authenticate(token);
+            return ResponseEntity.ok(tokenService.createToken((User) authentication.getPrincipal()));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @Bean
