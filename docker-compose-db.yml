@@ -9,8 +9,11 @@ services:
       POSTGRES_USER: spring_magic
       POSTGRES_DB: spring_magic
       POSTGRES_PASSWORD: 12345
+      REDIS_HOST: cache_magic
+      REDIS_PORT: 6379
 
   cache:
+    container_name: cache_magic
     image: redis:6.2-alpine
     restart: always
     ports:

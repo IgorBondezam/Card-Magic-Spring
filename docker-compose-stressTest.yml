@@ -12,8 +12,11 @@ services:
       POSTG_USER: spring_magic
       POSTG_PASSWORD: 12345
       PROFILE: stressTest
+      REDIS_HOST: cache_magic
+      REDIS_PORT: 6380
 
   cache:
+    container_name: cache_magic
     image: redis:6.2-alpine
     restart: always
     ports:
