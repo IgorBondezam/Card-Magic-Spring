@@ -5,7 +5,7 @@ services:
     restart: always
     build: .
     depends_on:
-      - cache
+      - redis
       - db
     ports:
       - 8080:8080
@@ -28,7 +28,7 @@ services:
       POSTGRES_DB: spring_magic
       POSTGRES_PASSWORD: 12345
 
-  cache:
+  redis:
     container_name: cache_magic
     image: redis:6.2-alpine
     restart: always
@@ -41,3 +41,4 @@ services:
 volumes:
     cache:
       driver: local
+

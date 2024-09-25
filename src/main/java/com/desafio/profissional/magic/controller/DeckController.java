@@ -36,9 +36,6 @@ public class DeckController {
         try {
             return ResponseEntity.ok(returnService.findAll());
         } catch (Exception e) {
-            log.error(e.fillInStackTrace());
-            log.error(e.toString());
-            log.error(e);
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
