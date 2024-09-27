@@ -40,6 +40,15 @@ public class DeckController {
         }
     }
 
+    @GetMapping("without-cache")
+    public ResponseEntity findAllDecksWithoutCache() {
+        try {
+            return ResponseEntity.ok(service.findAll());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
     @GetMapping("user")
     public ResponseEntity findDeckLoggedInUser(Authentication auth) {
         try {
