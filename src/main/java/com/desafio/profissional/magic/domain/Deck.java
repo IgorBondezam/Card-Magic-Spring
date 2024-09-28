@@ -28,7 +28,7 @@ public class Deck implements Serializable {
     @JoinColumn(name = "commander")
     private Card commander;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "deck_card",
             joinColumns = @JoinColumn(name = "decK_id"),

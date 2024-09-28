@@ -9,6 +9,7 @@ import com.desafio.profissional.magic.repository.DeckRepository;
 import com.desafio.profissional.magic.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class DeckService {
         return repository.findDeckByUserId(userId);
     }
 
+    @CacheEvict(cacheNames = "deckCache", allEntries = true)
     public void setCommanderOnDeckByName(Long userId, Long deckId, String name) throws MagicValidatorException {
         List<String> colors = new ArrayList<>();
         Deck actualDeck = repository.findById(deckId).orElseThrow(() ->
@@ -52,6 +54,7 @@ public class DeckService {
         repository.save(actualDeck);
     }
 
+    @CacheEvict(cacheNames = "deckCache", allEntries = true)
     public void set99Cards(Long userId, Long deckId) throws MagicValidatorException {
         Deck actualDeck = repository.findById(deckId).orElseThrow(() ->
                 new MagicValidatorException("Deck doesn't have been set yet.")
@@ -66,16 +69,15 @@ public class DeckService {
         repository.save(actualDeck);
     }
 
+    @CacheEvict(cacheNames = "deckCache", allEntries = true)
     public Deck createDeck(Deck deck, Long userId) throws MagicValidatorException {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new MagicValidatorException("There isn't any player with this id"));
         deck.setUser(user);
-        Deck saved = repository.save(deck);
-//        user.getDeck().add(saved);
-//        userRepository.save(user);
-        return saved;
+        return repository.save(deck);
     }
 
+    @CacheEvict(cacheNames = "deckCache", allEntries = true)
     public Deck createDeckByFile(Long userId, String deckName, String json) throws IOException, MagicValidatorException {
         Deck deck = new Deck();
         deck.setName(deckName);

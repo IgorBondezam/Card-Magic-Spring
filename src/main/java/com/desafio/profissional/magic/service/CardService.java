@@ -40,7 +40,6 @@ public class CardService {
     }
 
     public Card getCommanderByName(String name) throws MagicValidatorException {
-
         List<Card> commander = repository.findCommanderByName(name);
         if (commander.isEmpty()) {
             throw new MagicValidatorException("The card list isn't populeted or this card isn't a commander");
@@ -51,9 +50,7 @@ public class CardService {
     public List<Card> getCardsByCommandColor(String colorsFilter) {
         List<Card> cards = new ArrayList<>();
         List<String> colors = Arrays.asList(colorsFilter.split(""));
-        colors.forEach(c -> {
-            cards.addAll(repository.findNotCommanderByColor(c));
-        });
+        colors.forEach(c -> cards.addAll(repository.findNotCommanderByColor(c)));
         return cards;
     }
 

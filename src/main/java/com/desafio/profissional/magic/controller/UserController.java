@@ -3,7 +3,6 @@ package com.desafio.profissional.magic.controller;
 import com.desafio.profissional.magic.converter.UserConverter;
 import com.desafio.profissional.magic.domain.User;
 import com.desafio.profissional.magic.domain.record.UserRecordReq;
-import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.service.UserService;
 import com.desafio.profissional.magic.service.returnService.UserReturnService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,9 +52,12 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-    public ResponseEntity findById(@PathVariable("id") Long id) throws UserException {
+    public ResponseEntity findById(@PathVariable("id") Long id) {
+        try{
             return ResponseEntity.ok(returnService.findById(id));
-
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -64,16 +66,6 @@ public class UserController {
         try {
             return ResponseEntity.ok(returnService.findAll());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteById(@PathVariable("id") Long id) {
-        try {
-            service.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e){
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }

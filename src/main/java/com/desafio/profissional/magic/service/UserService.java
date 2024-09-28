@@ -5,6 +5,7 @@ import com.desafio.profissional.magic.domain.record.UserInfoRecordRes;
 import com.desafio.profissional.magic.exception.UserException;
 import com.desafio.profissional.magic.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,11 @@ public class UserService {
         return repository.findAllRes();
     }
 
+    @CacheEvict(cacheNames = "userCache", allEntries = true)
     public User save(User user) throws UserException {
+        if(Objects.nonNull(repository.findByEmail(user.getEmail()))) {
+            throw new UserException("This email user is alrealy used");
+        }
         user.setPassword(passwordEncoder(user.getPassword()));
         try{
             if(isCreatedUserAndDeckIsNull(user)) {
@@ -36,6 +41,8 @@ public class UserService {
             throw new UserException("Error to save the user. Try again later");
         }
     }
+
+    @CacheEvict(cacheNames = "userCache", allEntries = true)
     public User update(Long id, User newUser) throws UserException {
         User user = findById(id);
         user.setEmail(newUser.getEmail());
@@ -51,6 +58,7 @@ public class UserService {
         return user.get();
     }
 
+    @CacheEvict(cacheNames = "userCache", allEntries = true)
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

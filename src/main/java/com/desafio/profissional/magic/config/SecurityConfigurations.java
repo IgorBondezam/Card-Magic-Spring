@@ -3,7 +3,6 @@ package com.desafio.profissional.magic.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -28,7 +27,6 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/user").permitAll();
-                    req.requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "/user").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "/deck").hasRole("ADMIN");
                     req.requestMatchers(HttpMethod.GET, "/card/seed").hasRole("ADMIN");
@@ -43,6 +41,4 @@ public class SecurityConfigurations {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
-
-
 }

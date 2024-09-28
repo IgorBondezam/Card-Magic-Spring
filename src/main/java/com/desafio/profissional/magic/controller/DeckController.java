@@ -4,7 +4,6 @@ import com.desafio.profissional.magic.converter.DeckConverter;
 import com.desafio.profissional.magic.domain.Deck;
 import com.desafio.profissional.magic.domain.User;
 import com.desafio.profissional.magic.domain.record.DeckRecordReq;
-import com.desafio.profissional.magic.exception.MagicValidatorException;
 import com.desafio.profissional.magic.service.DeckService;
 import com.desafio.profissional.magic.service.returnService.DeckReturnService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URI;
 
 @RestController
@@ -95,19 +93,24 @@ public class DeckController {
                     .toUri();
             return ResponseEntity.created(location).body("Deck has been created");
         } catch (Exception e) {
-            log.error(e.getStackTrace());
+            log.error(e);
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     @PostMapping(value = "/import/{deckName}",  consumes = "multipart/form-data")
-    public ResponseEntity importDeck(@PathVariable("deckName") String deckName, @RequestPart("file") MultipartFile document , Authentication auth) throws IOException, MagicValidatorException {
-        Deck deck = service.createDeckByFile(((User) auth.getPrincipal()).getId(), deckName, new String(document.getBytes()));
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/deck/{deckId}")
-                .buildAndExpand(deck.getId())
-                .toUri();
-        return ResponseEntity.created(location).body("Deck has been created");
+    public ResponseEntity importDeck(@PathVariable("deckName") String deckName, @RequestPart("file") MultipartFile document , Authentication auth) {
+        try{
+            Deck deck = service.createDeckByFile(((User) auth.getPrincipal()).getId(), deckName, new String(document.getBytes()));
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/deck/{deckId}")
+                    .buildAndExpand(deck.getId())
+                    .toUri();
+            return ResponseEntity.created(location).body("Deck has been created");
+        } catch (Exception e) {
+            log.error(e);
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 }

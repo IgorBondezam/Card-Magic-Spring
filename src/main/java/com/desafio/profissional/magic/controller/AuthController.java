@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RequestMapping("/login")
 @RestController
@@ -33,9 +36,15 @@ public class AuthController {
     @PostMapping
     public ResponseEntity makeLogin(@RequestBody @Valid UserLogin user) {
         try {
-            var token = new UsernamePasswordAuthenticationToken(user.email(), user.password());
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.email(), user.password());
             Authentication authentication = manager.authenticate(token);
-            return ResponseEntity.ok(tokenService.createToken((User) authentication.getPrincipal()));
+            String tokenAuth = tokenService.createToken((User) authentication.getPrincipal());
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/login")
+                    .buildAndExpand(tokenAuth)
+                    .toUri();
+            return ResponseEntity.created(location).body(tokenAuth);
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }

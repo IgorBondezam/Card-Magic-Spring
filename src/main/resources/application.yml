@@ -35,3 +35,4 @@ api:
     token: ${JWT_SECRET:teste12345}
   utils:
     totalPage: ${TOTAL_PAGE:937}
+    cacheDuration: ${CACHE_DURATION:30}
