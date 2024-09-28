@@ -1,86 +1,104 @@
-# Getting Started
+# Magic: The Gathering Commander API
 
-### Reference Documentation
-For further reference, please consider the following sections:
+## Overview
+This application is an API built for Magic: The Gathering (MTG) fans, specifically focused on the Commander format. It allows users to search, filter, and explore the vast library of MTG cards, sourced directly from the Magic: The Gathering API. The goal is to provide an easy and efficient way to interact with card data, making it useful for developers and players alike.
 
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/3.3.2/gradle-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.3.2/gradle-plugin/packaging-oci-image.html)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/3.3.2/reference/htmlsingle/index.html#web)
-* [Validation](https://docs.spring.io/spring-boot/docs/3.3.2/reference/htmlsingle/index.html#io.validation)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.3.2/reference/htmlsingle/index.html#data.sql.jpa-and-spring-data)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/3.3.2/reference/htmlsingle/index.html#using.devtools)
-* [Spring Security](https://docs.spring.io/spring-boot/docs/3.3.2/reference/htmlsingle/index.html#web.security)
+## Features
+- **Access to Commander Cards**: The API pulls data directly from the official Magic API, ensuring up-to-date card information.
+- **Filtering and Search**: Search for cards based on various attributes such as name, mana cost, type, and colors, ideal for building or refining Commander decks.
+- **Commander-Specific Cards**: The API focuses on cards that are most relevant to the Commander format, a popular multiplayer MTG mode.
+
+## Data Source
+All card data is extracted from the official Magic: The Gathering API:
+ ```markdown
+ https://api.magicthegathering.io/v1/cards
+  ```
+This ensures that the card database is constantly updated with the latest releases and rule changes.
+
+## How to Use
+Once the database is populated, you can explore the various endpoints to:
+- Search cards by name, type, color, or mana cost.
+- Retrieve details about individual cards, such as abilities, card types, and artwork.
+- Filter cards specifically for Commander deck building.
+
+## Future Enhancements
+- **Commander-specific rules**: Tailor the API to validate cards and decks based on Commander format restrictions.
+- **Deck building**: Provide endpoints for creating, saving, and sharing Commander decks.
+- **Community features**: Allow users to rate or comment on cards for better deck-building recommendations.
 
 
-### Guides
-The following guides illustrate how to use some features concretely:
+## Technologies Used
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Validation](https://spring.io/guides/gs/validating-form-input/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
-* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
+- **Spring Boot Starter Data JPA**: For object-relational mapping and database operations.
+- **Spring Boot Starter Security**: To secure the application with authentication and authorization.
+- **Spring Boot Starter Validation**: To handle validation for incoming data.
+- **Spring Boot Starter Web**: To build RESTful web services and APIs.
+- **Liquibase**: For database versioning and migration.
+- **Java JWT**: For implementing JSON Web Token (JWT)-based authentication.
+- **Lombok**: To reduce boilerplate code through annotations like `@Getter`, `@Setter`, etc.
+- **Spring Boot DevTools**: To enhance the development experience with hot reloads.
+- **PostgreSQL**: The primary database used for persistence.
+- **SpringDoc OpenAPI**: For generating API documentation with OpenAPI/Swagger.
+- **H2 Database**: An in-memory database used for testing purposes.
+- **JUnit**: To facilitate unit and integration testing.
+- **Spring Boot Starter Test**: For testing support in Spring Boot applications.
+- **Spring Security Test**: For testing security components and authentication flows.
+- **Spring Boot Starter Data Redis**: To integrate Redis as a caching layer.
 
-### Additional Links
-These additional references should also help you:
+## Setup
 
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
+### Prerequisites
+- **JDK 17**
+- **Docker and Docker Compose**
+- **Maven or Gradle** (depending on your build system)
 
----
-## 🏁
+### Running the Application
+1. Clone the repository.
+2. Configure PostgreSQL connection in the `application.yml` or `application.properties`.
+3. Use Docker Compose to run the application:
+   ```base
+   docker-compose up -d
+   ```
+4. Access the API at `http://localhost:8080`.
 
-### To Start
-- Execute the `docker compose up`.
-  - This will start the database, compile and start the spring project.
-  - The values of host, ports, user and password is in `docker-compese.yml`
----
-### Here you are some end-points
+## How to Populate the Database
+To seed the application’s card database with data from the Magic API, use the following command:
+  ```markdown
+  localhost:8080/card/seed
+  ```
+This command fetches all the relevant cards from the Magic API and stores them in the local database, making them available for querying through the application’s endpoints.
 
-User
-- 
 
-    {
-        "email": "igorrrrr@gmail.com",
-        "password": "12345678"
-    }
+### Database Migration
+Liquibase is used to manage database versioning and migrations. The migration scripts are located in the `src/main/resources/db/changelog` directory.
 
-- ### Get
-  - http://localhost:8080/user
-  - http://localhost:8080/user/{userId}
-- ### Post
-  - http://localhost:8080/user
-  - http://localhost:8080/login
-- ### Put
-  - http://localhost:8080/user
+To apply migrations, ensure the Liquibase configuration is correctly set up in `application.yml`.
 
----
-Deck
-- 
+### API Documentation
+API documentation is automatically generated using OpenAPI (Swagger) and can be accessed at:
+`http://localhost:8080/swagger-ui.html`
 
-    {
-        "name": "The Thanos Deck"
-    }
+## Stress Testing
 
-- ### Post
-    - http://localhost:8080/deck/user/{userId}
-- ### Patch
-  - http://localhost:8080/deck/choose/commander/{userId}/{commander's_name}
-  - http://localhost:8080/deck/choose/random/99/{userId}
+A stress test can be performed using Docker Compose and Autocannon.
 
----
+### Running the Stress Test
+1. Use the following script to start the services for the stress test:
+   ```base
+   @echo off docker-compose -f docker-compose-stressTest.yml up -d
+   ```
 
-Spring Documentation (Swagger)
--
+2. Wait for the services to start.
+3. Run the stress test using Autocannon:
+   ```base
+   npx autocannon -c 1000 -d 30 http://localhost:8080/deck
+   ```
+ 
+### Stress Test Results
 
-- After projects run, you can acess http://localhost:8080/swagger-ui/index.html to run the end-points.
+#### With Redis Cache
+- **19k requests** in **30.8s**, **1.37 GB** read.
 
----
-
-Seed 🌱 
--
-
-- After login with an admin, make sure you run the seed end-point (`/card/seed`) to use the others functions.
+#### Without Redis Cache
+- **22k requests** in **31.36s**, **53.1 MB** read.
+- **19k errors** (4k timeouts).
