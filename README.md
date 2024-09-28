@@ -84,17 +84,14 @@ A stress test can be performed using Docker Compose and Autocannon.
 
 ### Running the Stress Test
 1. Use the following script to start the services for the stress test:
+2. In project directory run
    ```base
-   @echo off docker-compose -f docker-compose-stressTest.yml up -d
+   stress_test.bat
    ```
 
-2. Wait for the services to start.
-3. Run the stress test using Autocannon:
-   ```base
-   npx autocannon -c 1000 -d 30 http://localhost:8080/deck
-   ```
+3. Wait for the services to start and then will return the result on bash
  
-### Stress Test Results
+### Some Stress Test Results
 
 #### With Redis Cache
 - **19k requests** in **30.8s**, **1.37 GB** read.
