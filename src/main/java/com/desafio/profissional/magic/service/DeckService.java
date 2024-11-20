@@ -8,12 +8,17 @@ import com.desafio.profissional.magic.exception.MagicValidatorException;
 import com.desafio.profissional.magic.repository.DeckRepository;
 import com.desafio.profissional.magic.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class DeckService {
@@ -26,6 +31,9 @@ public class DeckService {
 
     @Autowired
     private DeckRepository repository;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     public List<Deck> findAll() {
         return repository.findAll();
@@ -90,6 +98,16 @@ public class DeckService {
         validCardsNoCommander(cards, commanderColor);
         deck.setCards(cards.stream().map(CardConverter::fromCardApiToCard).toList());
         return createDeck(deck, userId);
+    }
+
+    public String addCardById(Long deckId, String cardId) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        amqpTemplate.convertAndSend(
+                "magic-queue",
+                deckId + ";" + cardId
+        );
+        return "The card will be add on your deck";
     }
 
     private void validCardsNoCommander(List<CardAPI> cards, List<String> commanderColor) throws MagicValidatorException {

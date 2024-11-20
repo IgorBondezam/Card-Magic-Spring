@@ -113,4 +113,14 @@ public class DeckController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
+
+    @PatchMapping(value = "/add-card/{deckId}/{cardId}")
+    public ResponseEntity addNewCardById(@PathVariable("deckId") Long deckId, @PathVariable("cardId") String cardId) {
+        try {
+            return ResponseEntity.ok(service.addCardById(deckId, cardId));
+        } catch (Exception e) {
+            log.error(e);
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
 }

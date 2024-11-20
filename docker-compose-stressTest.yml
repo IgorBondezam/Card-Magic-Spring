@@ -23,6 +23,13 @@ services:
     volumes:
       - cache:/data
 
+  rabbitmq:
+    image: "rabbitmq:3.8.6-management-alpine"
+    container_name: rabbitmq-magic
+    ports:
+      - 5672:5672
+      - 15672:15672
+
 volumes:
     cache:
       driver: local
