@@ -101,11 +101,11 @@ public class DeckController {
     @PostMapping(value = "/import/{deckName}",  consumes = "multipart/form-data")
     public ResponseEntity importDeck(@PathVariable("deckName") String deckName, @RequestPart("file") MultipartFile document , Authentication auth) {
         try{
-            Deck deck = service.createDeckByFile(((User) auth.getPrincipal()).getId(), deckName, new String(document.getBytes()));
+            service.createDeckByFile(((User) auth.getPrincipal()).getId(), deckName, new String(document.getBytes()));
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
-                    .path("/deck/{deckId}")
-                    .buildAndExpand(deck.getId())
+                    .path("/deck")
+                    .buildAndExpand()
                     .toUri();
             return ResponseEntity.created(location).body("Deck has been created");
         } catch (Exception e) {

@@ -36,12 +36,3 @@ api:
   utils:
     totalPage: ${TOTAL_PAGE:937}
     cacheDuration: ${CACHE_DURATION:30}
-
-rabbitmq:
-  queue:
-    name: "magic-queue"
-  exchange:
-    name: "magic-exchange"
-  routing:
-    key:
-      name: "magic-routing-key"

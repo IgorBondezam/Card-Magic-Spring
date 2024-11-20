@@ -32,4 +32,7 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
             " where c.superTypes not ilike ('%legendary%') and c.colors ilike CONCAT('%',UPPER(:color),'%')")
     List<Card> findNotCommanderByColor(@Param("color") String color);
 
+    @Query("select c from Card c where c.id in (:ids)")
+    List<Card> findCardsInId(@Param("ids") List<UUID> ids);
+
 }

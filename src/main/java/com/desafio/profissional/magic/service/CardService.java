@@ -18,10 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,6 +31,10 @@ public class CardService {
 
     @Value("${api.utils.totalPage}")
     private Long totalPage;
+
+    public Optional<Card> findById(UUID id) {
+        return repository.findById(id);
+    }
 
     public List<Card> findAll() {
         return repository.findAll();
@@ -57,6 +58,10 @@ public class CardService {
     public List<Card> getCardLimitDeckByCommander(Card commander) {
         String colors = String.join("", commander.getColors());
         return getCardsByCommandColor(colors);
+    }
+
+    public List<Card> getAllCardsInId(List<UUID> ids) {
+        return repository.findCardsInId(ids);
     }
 
     @Transactional

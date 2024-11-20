@@ -4,9 +4,11 @@ import com.desafio.profissional.magic.converter.CardConverter;
 import com.desafio.profissional.magic.domain.Deck;
 import com.desafio.profissional.magic.domain.User;
 import com.desafio.profissional.magic.domain.record.API.CardAPI;
+import com.desafio.profissional.magic.domain.record.ImportDeckMessage;
 import com.desafio.profissional.magic.exception.MagicValidatorException;
 import com.desafio.profissional.magic.repository.DeckRepository;
 import com.desafio.profissional.magic.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -14,6 +16,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -85,47 +88,22 @@ public class DeckService {
         return repository.save(deck);
     }
 
+    @Async
     @CacheEvict(cacheNames = "deckCache", allEntries = true)
-    public Deck createDeckByFile(Long userId, String deckName, String json) throws IOException, MagicValidatorException {
-        Deck deck = new Deck();
-        deck.setName(deckName);
-        List<CardAPI> cards = readCardFile(json);
-        List<CardAPI> commander = getCommanderInCards(cards);
-        List<String> commanderColor = commander.get(0).colors();
-        cardService.validCommander(commander);
-        deck.setCommander(CardConverter.fromCardApiToCard(commander.get(0)));
-        cards.remove(commander.get(0));
-        validCardsNoCommander(cards, commanderColor);
-        deck.setCards(cards.stream().map(CardConverter::fromCardApiToCard).toList());
-        return createDeck(deck, userId);
+    public void createDeckByFile(Long userId, String deckName, String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        amqpTemplate.convertAndSend(
+                "deck_import_queue",
+                objectMapper.writeValueAsString(new ImportDeckMessage(userId, deckName, json))
+        );
     }
 
-    public String addCardById(Long deckId, String cardId) throws IOException, TimeoutException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+    public String addCardById(Long deckId, String cardId) {
         amqpTemplate.convertAndSend(
-                "magic-queue",
+                "add-cards-queue",
                 deckId + ";" + cardId
         );
         return "The card will be add on your deck";
-    }
-
-    private void validCardsNoCommander(List<CardAPI> cards, List<String> commanderColor) throws MagicValidatorException {
-        List<CardAPI> invalidCards = cards.stream()
-                .filter(c -> c.colors().stream().noneMatch(commanderColor::contains)).toList();
-        if(!invalidCards.isEmpty()) {
-            throw new MagicValidatorException("There are cards those are out of the commander colors rule");
-        }
-    }
-
-    private List<CardAPI> getCommanderInCards(List<CardAPI> cards) {
-        return cards.stream().filter(c -> c.supertypes().contains("Legendary")).toList();
-    }
-
-    private List<CardAPI> readCardFile(String json) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<CardAPI> cards = new ArrayList<>(Arrays.stream(objectMapper.readValue(json, CardAPI[].class)).toList());
-        return cards;
     }
 
     private void isDeckFromUser(Long deckId, Long userId) throws MagicValidatorException {

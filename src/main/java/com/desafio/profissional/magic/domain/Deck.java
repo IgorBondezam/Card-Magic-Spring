@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class Deck implements Serializable {
             name = "deck_card",
             joinColumns = @JoinColumn(name = "decK_id"),
             inverseJoinColumns = @JoinColumn(name = "card_id"))
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

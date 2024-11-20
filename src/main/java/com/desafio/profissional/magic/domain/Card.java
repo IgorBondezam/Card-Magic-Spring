@@ -66,35 +66,35 @@ public class Card implements Serializable {
     }
 
     public void setColorIdentity(List<String> color_identity) {
-        if(Objects.isNull(color_identity)) {
+        if(Objects.isNull(color_identity) || color_identity.isEmpty()) {
             return;
         }
         this.colorIdentity = String.join(",", color_identity);
     }
 
     public void setColors(List<String> colors) {
-        if(Objects.isNull(colors)) {
+        if(Objects.isNull(colors) || colors.isEmpty()) {
             return;
         }
         this.colors = String.join(",", colors);
     }
 
     public void setSuperTypes(List<String> superTypes) {
-        if(Objects.isNull(superTypes)) {
+        if(Objects.isNull(superTypes) || superTypes.isEmpty()) {
             return;
         }
         this.superTypes = String.join(",", superTypes);
     }
 
     public void setTypes(List<String> types) {
-        if(Objects.isNull(types)) {
+        if(Objects.isNull(types) || types.isEmpty()) {
             return;
         }
         this.types = String.join(",", types);
     }
 
     public void setSubTypes(List<String> subTypes) {
-        if(Objects.isNull(subTypes)) {
+        if(Objects.isNull(subTypes) || subTypes.isEmpty()) {
             return;
         }
         this.subTypes = String.join(",", subTypes);
