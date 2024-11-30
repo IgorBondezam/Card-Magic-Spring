@@ -35,6 +35,7 @@ Once the database is populated, you can explore the various endpoints to:
 - **Spring Boot Starter Web**: To build RESTful web services and APIs.
 - **Liquibase**: For database versioning and migration.
 - **Java JWT**: For implementing JSON Web Token (JWT)-based authentication.
+- **RabbitMQ**: For queue management and asynchronous message processing.
 - **Lombok**: To reduce boilerplate code through annotations like `@Getter`, `@Setter`, etc.
 - **Spring Boot DevTools**: To enhance the development experience with hot reloads.
 - **PostgreSQL**: The primary database used for persistence.
@@ -45,6 +46,26 @@ Once the database is populated, you can explore the various endpoints to:
 - **Spring Security Test**: For testing security components and authentication flows.
 - **Spring Boot Starter Data Redis**: To integrate Redis as a caching layer.
 
+## RabbitMQ Integration
+The application uses RabbitMQ to handle asynchronous operations for deck management, ensuring better performance and scalability.
+
+### Queues
+- add-cards-queue: Handles the operation of adding a specific card to a deck.
+   Endpoint:
+   ```markdown
+   POST /deck/add-card/{deckId}/{cardId}
+   ```
+  This route enqueues the operation to the add-cards-queue, allowing it to be processed asynchronously.
+
+
+- deck_import_queue: Processes deck imports from uploaded files.
+  Endpoint:
+   ```markdown
+   POST /deck/import/{deckName}
+   ```
+  This route accepts a file, reads its contents, and sends the data to the deck_import_queue for processing on the other side of the queue.
+
+These queues decouple time-consuming operations from the main application flow, improving responsiveness.
 ## Setup
 
 ### Prerequisites
